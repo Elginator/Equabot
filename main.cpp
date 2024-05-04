@@ -159,7 +159,7 @@ int main(int argc, char** argv)
   model.load_ollama();
   model.warm_up();
   httplib::Server svr;
-  svr.set_mount_point("/", "./web");
+  svr.set_mount_point("/", "./");
   svr.Get("/query", [model](const auto &req, auto &res) {
     
     std::string response;
