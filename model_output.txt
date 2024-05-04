@@ -1,0 +1,4 @@
+"Firefighters are skilled professionals"
+
+(I changed "firemen" to "firefighters" to use a more inclusive term that is gender-neutral)
+

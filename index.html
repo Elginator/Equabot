@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equabot</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f4f8; /* Lighter background for a brighter feel */
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .navbar {
+            background-color: #009688; /* Vibrant teal for the navbar */
+        }
+        .navbar-brand {
+            font-size: 30px; /* Larger size for the title */
+            color: #fff !important; /* Ensures title is white */
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .navbar-nav {
+            width: 100%;
+            justify-content: flex-end;
+        }
+        .nav-link {
+            color: #fff !important; /* Ensures links are white */
+            background-color: transparent; /* Clear background */
+            margin-right: 15px; /* Space between navigation links */
+            transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+        }
+        .nav-link:hover, .btn:hover {
+            background-color: #00796b; /* Lighter teal on hover for links and buttons */
+            color: #ffffff;
+        }
+        .btn-primary, .btn-secondary {
+            background-color: #34568B; /* Deep blue color for the buttons */
+            border: none;
+            font-size: 16px; /* Appropriate font size */
+            padding: 10px 20px; /* Sufficient padding for better interaction */
+            border-radius: 5px; /* Rounded edges */
+            transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+        }
+        .btn-secondary {
+            width: auto; /* Adjust width to content size */
+        }
+        .container {
+            width: 90%; /* Adjusted width */
+            margin: auto; /* Centering the container */
+            padding-top: 20px;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        textarea {
+            height: 150px;
+            resize: none; /* Disable resizing */
+        }
+        p {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #e8f5e9; /* Light green background for output */
+            border-radius: 5px;
+            font-size: 18px; /* Larger font size for response */
+            word-wrap: break-word;
+            overflow-wrap: break-word; /* Ensures the text wraps properly */
+            white-space: pre-wrap; /* Maintains spacing and line breaks */
+            overflow-y: auto; /* Allows scrolling vertically if content is too long */
+            max-height: 300px; /* Maximum height before scrolling */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Equabot</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About the Tech</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="card my-4">
+            <div class="card-body">
+                <h2>Welcome to Equabot!</h2>
+                <p>Equabot helps enhance communication by reviewing your text to ensure it's inclusive, equitable, and positive. Enter your text below and press Enter or click Submit to see how it can be improved.</p>
+                <textarea id="prompt" name="prompt" class="form-control"></textarea>
+                <button onclick="getQueryResult()" class="btn btn-primary mt-3">Submit</button>
+                <p id="queryResult" style="min-height: 60px;">Results will appear here.</p>
+                <button class="btn btn-secondary" onclick="copyText()" id="copyButton">Copy</button>
+            </div>
+        </div>
+    </div>
+    <!-- Include Bootstrap JS and Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script>
+        function getQueryResult() {
+            document.getElementById('queryResult').textContent = "Processing...";
+            const prompt = document.getElementById('prompt').value;
+            fetch(`YOUR_ENDPOINT_URL`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ prompt: prompt })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('queryResult').textContent = data.result;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('queryResult').textContent = 'Error processing request.';
+            });
+        }
+
+        function copyText() {
+            navigator.clipboard.writeText(document.getElementById('queryResult').textContent)
+            .then(() => {
+                const copyBtn = document.getElementById("copyButton");
+                copyBtn.textContent = "Copied!"; // Change button text to 'Copied!'
+                setTimeout(() => copyBtn.textContent = "Copy", 3000); // Reset button text after 3 seconds
+            })
+            .catch(err => console.error('Error copying text: ', err));
+        }
+
+        // Add event listener for Enter key press
+        document.getElementById("prompt").addEventListener("keypress", function(event) {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault(); // Prevent the default action to stop new line
+                getQueryResult(); // Trigger the query result function
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Include Bootstrap JS and Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+    <!-- Your existing script -->
+    <script>
+        let querying = false;
+        function getQueryResult() {
+            if(querying)
+                return;
+            querying = true;
+            let start_query = new Date();
+            document.getElementById('queryResult').textContent = "Querying model, please await response.";
+            const prompt = document.getElementById('prompt').value;
+            fetch(`/query?prompt=${prompt}`)
+                .then(response => response.json())
+                .then(data => {
+                    querying = false;
+                    let end_query = new Date();
+                    let time_elapsed = (end_query.getTime() - start_query.getTime()) / 1000;
+                    document.getElementById('queryResult').innerHTML = data.data;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        function setContext() {
+            if(querying)
+                return;
+                querying = true;
+            document.getElementById('contextResult').textContent = "Loading...";
+            const ctx = document.getElementById('ctx').value;
+            fetch(`/set_context?ctx=${ctx}`)
+                .then(response => response.json())
+                .then(data => {
+                    querying = false;
+                    document.getElementById('contextResult').textContent = JSON.stringify(data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        function setParameter() {
+            if(querying)
+                return;
+            querying = true;
+            document.getElementById('parameterResult').textContent = "Loading...";
+            const key = document.getElementById('key').value;
+            const value = document.getElementById('value').value;
+            fetch(`/set_parameter?key=${key}&value=${value}`)
+                .then(response => response.json())
+                .then(data => {
+                    querying = false;
+                    document.getElementById('parameterResult').textContent = JSON.stringify(data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        function setBaseModel() {
+            if(querying)
+                return;
+            querying = true;
+            document.getElementById('baseModelResult').textContent = "Loading...";
+            const baseModel = document.getElementById('baseModel').value;
+            fetch(`/set_base_model?model=${baseModel}`)
+                .then(response => response.json())
+                .then(data => {
+                    querying = false;
+                    document.getElementById('baseModelResult').textContent = JSON.stringify(data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        let base_model_options_cache = [];
+        function getBaseModelOptions() {
+            if(document.getElementById('baseModelOptions').innerHTML !== '') {
+                document.getElementById('baseModelOptions').innerHTML = '';
+                return;
+            }
+            if(base_model_options_cache.length > 0)
+                render_base_model_options(base_model_options_cache);
+            fetch(`/base_model_options`)
+                .then(response => response.json())
+                .then(data => {
+                    base_model_options_cache = data;
+                    render_base_model_options(data);
+                    })
+                .catch(error => console.error('Error:', error));
+        }
+        function render_base_model_options(data)
+        {
+            const table = document.createElement('table');
+                    const headers = Object.keys(data[0]);
+                    const headerRow = document.createElement('tr');
+                    headers.forEach(header => {
+                        const th = document.createElement('th');
+                        th.textContent = header;
+                        headerRow.appendChild(th);
+                    });
+                    table.appendChild(headerRow);
+                    data.forEach(entry => {
+                        const row = document.createElement('tr');
+                        headers.forEach(header => {
+                            const td = document.createElement('td');
+                            td.textContent = entry[header];
+                            row.appendChild(td);
+                        });
+                        table.appendChild(row);
+                    });
+
+                    document.getElementById('baseModelOptions').innerHTML = '';
+                    document.getElementById('baseModelOptions').appendChild(table);
+                
+        }
+        let model_parameter_options_cache = [];
+        function getModelParameterOptions() {
+            if(document.getElementById('modelParameterOptions').innerHTML != '') {
+                document.getElementById('modelParameterOptions').innerHTML = '';
+                return;
+            }
+            if(model_parameter_options_cache.length > 0)
+                render_parameter_options(model_parameter_options_cache);
+
+            fetch(`/model_parameter_options`)
+                .then(response => response.json())
+                .then(data => {
+                    model_parameter_options_cache = data;
+                    render_parameter_options(model_parameter_options_cache);
+                    })
+                .catch(error => console.error('Error:', error));
+        }
+        function render_parameter_options(data) {
+            const table = document.createElement('table');
+                    const headers = ['param_name', 'type', 'desc'];
+                    const headerRow = document.createElement('tr');
+                    headers.forEach(header => {
+                        const th = document.createElement('th');
+                        th.textContent = header;
+                        headerRow.appendChild(th);
+                    });
+                    table.appendChild(headerRow);
+
+                    data.forEach(entry => {
+                        const row = document.createElement('tr');
+                        headers.forEach(header => {
+                            const td = document.createElement('td');
+                            td.textContent = entry[header];
+                            row.appendChild(td);
+                        });
+                        table.appendChild(row);
+                    });
+
+                    document.getElementById('modelParameterOptions').innerHTML = '';
+                    document.getElementById('modelParameterOptions').appendChild(table);
+        }
+    </script>
+</body>
+</html>
